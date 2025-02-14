@@ -35,8 +35,8 @@ function drawMoon(size, col, phase) {
   push();
 
   // mask
-  clip(outer(phase));
-  clip(inner(phase));
+  clip(outer(size));
+  clip(inner(phase, size));
 
   // texture
   background(lerpColor(color(220), col, 0.1));
@@ -50,12 +50,12 @@ function drawMoon(size, col, phase) {
 
   // shade
   coverHalf(phase);
-  innerArc(phase);
+  innerArc(phase, size);
 }
 
-function outer(phase) {
+function outer(size) {
   return () => {
-    arc(200, 200, 300, 300, 0, 2 * PI);
+    arc(200, 200, size, size, 0, 2 * PI);
   };
 }
 
@@ -68,27 +68,63 @@ function coverHalf(phase) {
   }
 }
 
-function innerArc(phase) {
+function innerArc(phase, size) {
   fill(0);
   // stroke(255);
   if (phase < 8) {
-    const control = -800 + phase * 130;
-    curve(control, 50, 200, 50, 200, 350, control, 350);
+    const control = -800 * (size / 300) + phase * (130 * (size / 300));
+    curve(
+      control,
+      200 - size / 2,
+      200,
+      200 - size / 2,
+      200,
+      200 + size / 2,
+      control,
+      200 + size / 2
+    );
   } else if (phase > 22) {
-    const control = -800 + (phase % 15) * 160;
-    curve(control, 50, 200, 50, 200, 350, control, 350);
+    const control = -800 * (size / 300) + (phase % 15) * (160 * (size / 300));
+    curve(
+      control,
+      200 - size / 2,
+      200,
+      200 - size / 2,
+      200,
+      200 + size / 2,
+      control,
+      200 + size / 2
+    );
   }
 }
 
-function inner(phase) {
+function inner(phase, size) {
   return () => {
     if (phase >= 8 && phase < 15) {
-      const control = -800 + phase * 130;
-      curve(control, 50, 200, 50, 200, 350, control, 350);
+      const control = -800 * (size / 300) + phase * (130 * (size / 300));
+      curve(
+        control,
+        200 - size / 2,
+        200,
+        200 - size / 2,
+        200,
+        200 + size / 2,
+        control,
+        200 + size / 2
+      );
       rect(200, 50, 350, 350);
     } else if (phase >= 16 && phase < 22) {
-      const control = -800 + (phase % 15) * 130;
-      curve(control, 50, 200, 50, 200, 350, control, 350);
+      const control = -800 * (size / 300) + (phase % 15) * (130 * (size / 300));
+      curve(
+        control,
+        200 - size / 2,
+        200,
+        200 - size / 2,
+        200,
+        200 + size / 2,
+        control,
+        200 + size / 2
+      );
       rect(50, 50, 150, 350);
     } else {
       // deactivate clipping
