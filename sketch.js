@@ -18,9 +18,9 @@ function setup() {
 }
 function draw() {
   background(0);
-  stroke(255);
+  fill(255);
   text(`${phaseSlider.value()}`, 10, 26);
-  drawMoon(300, color(130, 15, 130), phaseSlider.value());
+  drawMoon(300, color(2, 15, 200), phaseSlider.value());
 }
 
 function drawMoon(size, col, phase) {
@@ -56,6 +56,41 @@ function drawMoon(size, col, phase) {
 function outer(size) {
   return () => {
     arc(200, 200, size, size, 0, 2 * PI);
+  };
+}
+
+function inner(phase, size) {
+  return () => {
+    if (phase >= 8 && phase < 15) {
+      const control = -800 * (size / 300) + phase * (130 * (size / 300));
+      curve(
+        control,
+        200 - size / 2,
+        200,
+        200 - size / 2,
+        200,
+        200 + size / 2,
+        control,
+        200 + size / 2
+      );
+      rect(200, 50, 350, 350);
+    } else if (phase >= 16 && phase < 22) {
+      const control = -800 * (size / 300) + (phase % 15) * (130 * (size / 300));
+      curve(
+        control,
+        200 - size / 2,
+        200,
+        200 - size / 2,
+        200,
+        200 + size / 2,
+        control,
+        200 + size / 2
+      );
+      rect(50, 50, 150, 350);
+    } else {
+      // deactivate clipping
+      rect(0, 0, width, height);
+    }
   };
 }
 
@@ -96,41 +131,6 @@ function innerArc(phase, size) {
       200 + size / 2
     );
   }
-}
-
-function inner(phase, size) {
-  return () => {
-    if (phase >= 8 && phase < 15) {
-      const control = -800 * (size / 300) + phase * (130 * (size / 300));
-      curve(
-        control,
-        200 - size / 2,
-        200,
-        200 - size / 2,
-        200,
-        200 + size / 2,
-        control,
-        200 + size / 2
-      );
-      rect(200, 50, 350, 350);
-    } else if (phase >= 16 && phase < 22) {
-      const control = -800 * (size / 300) + (phase % 15) * (130 * (size / 300));
-      curve(
-        control,
-        200 - size / 2,
-        200,
-        200 - size / 2,
-        200,
-        200 + size / 2,
-        control,
-        200 + size / 2
-      );
-      rect(50, 50, 150, 350);
-    } else {
-      // deactivate clipping
-      rect(0, 0, width, height);
-    }
-  };
 }
 
 function textureCircle(tintColor) {
